@@ -20,7 +20,7 @@ namespace Landis.Extension.Succession.NECN
         //We want one value per species to be stored here. I guess we can reuse the AuxParm structure?
         //I admit I don't really understand what the get and return are doing or how to use them here
             
-            // ROB TESTNG GITHUB DIRECT EDITS
+            // ROB TESTNG GITHUB DIRECT EDITS Rob was here.
         public Landis.Library.Parameters.Species.AuxParm<int> CWDThreshold { get { return cwdThreshold; } }
         public Landis.Library.Parameters.Species.AuxParm<double> MortalityAboveThreshold { get { return mortalityAboveThreshold; } }
         public Landis.Library.Parameters.Species.AuxParm<double> Intercept { get { return intercept; } }
