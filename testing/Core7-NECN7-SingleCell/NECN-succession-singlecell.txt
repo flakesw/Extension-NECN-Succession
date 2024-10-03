@@ -26,9 +26,17 @@ InitialSOM3CMapName			single300.tif<<300
 InitialSOM3NMapName			single15.tif<<15
 InitialDeadWoodSurfaceMapName	single110.tif <<New
 InitialDeadCoarseRootsMapName	single50.tif <<New
+NormalSWAMapName 			SWA_normals.tif <<optional, for use with drought mortality. 
+NormalCWDMapName			CWD_normals.tif <<optional, for use with drought mortality
+NormalTempMapName			Temp_normals.tif <<optional, for use with drought mortality
 
-CalibrateMode 	yes
+CalibrateMode 	no
 SmokeModelOutputs no
+Write_SWA_Maps no
+Write_CWD_Maps no
+Write_Temperature_Maps no
+Write_Species_Drought_Maps yes
+
 WaterDecayFunction Ratio <<Linear or Ratio
 
 ProbabilityEstablishAdjust 	1.0
@@ -46,6 +54,8 @@ DecayRateSOM3			0.0002
 SpeciesParameters NECN_Spp_Table.csv
 
 FunctionalGroupParameters NECN_Functional_Table.csv
+
+DroughtMortalityParameters "./necn_drought_params_example.csv"
 			
 FireReductionParameters
 >>	Severity	WoodLitter	Litter	CohortWood	CohortFoliar	SOM
