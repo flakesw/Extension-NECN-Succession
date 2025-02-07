@@ -45,6 +45,7 @@ namespace Landis.Extension.Succession.NECN
         public static Landis.Library.Parameters.Species.AuxParm<bool> Grass;
         public static Landis.Library.Parameters.Species.AuxParm<bool> NurseLog_depend; // W.Hotta (2021.08.01)
         public static Landis.Library.Parameters.Species.AuxParm<double> GrowthLAI;
+        public static Landis.Library.Parameters.Species.AuxParm<double> LAICompetitionConstant;
 
         //Drought mortality variables
         public static Landis.Library.Parameters.Species.AuxParm<int> CWDThreshold;
@@ -94,6 +95,8 @@ namespace Landis.Extension.Succession.NECN
             Grass               = parameters.Grass;
             NurseLog_depend         = parameters.Nlog_depend; // W.Hotta (2021.08.01)
             GrowthLAI           = parameters.GrowthLAI;
+            LAICompetitionConstant           = parameters.LAICompetitionConstant;
+
             //CWD Establishment
             CWDBegin            = parameters.CWDBegin;
             CWDMax              = parameters.CWDMax;

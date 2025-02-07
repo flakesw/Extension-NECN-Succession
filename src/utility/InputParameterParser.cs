@@ -357,6 +357,7 @@ namespace Landis.Extension.Succession.NECN
             InputVar<double> anerb1Override = new InputVar<double>("AnaerobicFactor1Override");
             if (ReadOptionalVar(anerb1Override))
             {
+                PlugIn.ModelCore.UI.WriteLine("Using AnaerobicFactor override");
                 OtherData.ratioPlantAvailableWaterPETMaximum = anerb1Override.Value;
             }
 
@@ -466,6 +467,7 @@ namespace Landis.Extension.Succession.NECN
                 parameters.SetLightLAIAdjust(species, ReadLightLAIAdjust(row));
 
                 parameters.SetGrowthLAI(species, ReadGrowthLAI(row));
+                parameters.SetLAICompetitionConstant(species, ReadLAICompetition(row));
 
                 //Optional parameters for CWD-limited establishment
                 parameters.SetCWDBeginLimit(species, ReadCWDBeginLimit(row));
@@ -836,6 +838,19 @@ namespace Landis.Extension.Succession.NECN
                 return 0; //SF set to 0 -- later handled to avoid CWD-based establishment if CWDBeginLimit == 0
             }
         }
+        private double ReadLAICompetition(DataRow row)
+        {
+            try
+            {
+                double laiComp = System.Convert.ToDouble(row["LAICompetitionConstant"]);
+                return laiComp;
+            }
+            catch
+            {
+                return -0.14;  // This was the default value for all previous versions of NECN.
+            }
+        }
+
         private double ReadGrowthLAI(DataRow row)
         {
             try

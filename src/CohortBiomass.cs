@@ -362,7 +362,8 @@ namespace Landis.Extension.Succession.NECN
             //This function calculates mortality as a function of NPP 
             double M_wood = (NPPwood * M_wood_NPP) + M_wood_fixed;
 
-            //PlugIn.ModelCore.UI.WriteLine("Mwood={0}, M_wood_relative={1}, NPPwood={2}, Spp={3}, Age={4}.", M_wood, M_wood_NPP, NPPwood, cohort.Species.Name, cohort.Age);
+            PlugIn.ModelCore.UI.WriteLine("Mwood={0}, M_wood_relative={1}, NPPwood={2}, M_wood_fixed = {5}, Spp={3}, Age={4}.", 
+                M_wood, M_wood_NPP, NPPwood, cohort.Species.Name, cohort.Age, M_wood_fixed);
 
 
             // Leaves and Needles dropped.
@@ -683,9 +684,11 @@ namespace Landis.Extension.Succession.NECN
 
         private static double calculate_LAI_Competition(ICohort cohort, ActiveSite site)
         {
-            double k = -0.14;  
+            //double k = -0.14;  
             // This is the value given for all temperature ecosystems. 
             // The model is relatively insensitive to this parameter ZR 06/01/2021
+
+            double k = SpeciesData.LAICompetitionConstant[cohort.Species];
 
             //   Chihiro 2020.01.22
             //   Competition between cohorts considering understory and overstory interactions

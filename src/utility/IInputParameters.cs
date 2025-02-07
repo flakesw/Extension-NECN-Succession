@@ -125,6 +125,7 @@ namespace Landis.Extension.Succession.NECN
         Landis.Library.Parameters.Species.AuxParm<int> MaxANPP { get; }
         Landis.Library.Parameters.Species.AuxParm<int> MaxBiomass { get; }
         Landis.Library.Parameters.Species.AuxParm<double> GrowthLAI { get; }
+        Landis.Library.Parameters.Species.AuxParm<double> LAICompetitionConstant { get; }
         Landis.Library.Parameters.Species.AuxParm<double> LightLAIShape { get; }
         Landis.Library.Parameters.Species.AuxParm<double> LightLAIScale { get; }
         Landis.Library.Parameters.Species.AuxParm<double> LightLAILocation { get; }

@@ -100,6 +100,7 @@ namespace Landis.Extension.Succession.NECN
         private Landis.Library.Parameters.Species.AuxParm<int> maxBiomass;
         private Landis.Library.Parameters.Species.AuxParm<bool> grass;  // optional
         private Landis.Library.Parameters.Species.AuxParm<double> growthLAI; // optional
+        private Landis.Library.Parameters.Species.AuxParm<double> laiCompetitionConstant; // optional
         private Landis.Library.Parameters.Species.AuxParm<bool> nlog_depend;
         private double grassThresholdMultiplier; // W.Hotta 2020.07.07
         private Landis.Library.Parameters.Species.AuxParm<double> lightLAIShape; 
@@ -491,6 +492,7 @@ namespace Landis.Extension.Succession.NECN
         public Landis.Library.Parameters.Species.AuxParm<double>  MaxDrought { get { return maxDrought; }}
         public Landis.Library.Parameters.Species.AuxParm<double>  LeafLongevity {get {return leafLongevity;}}
         public Landis.Library.Parameters.Species.AuxParm<double> GrowthLAI { get { return growthLAI; } }
+        public Landis.Library.Parameters.Species.AuxParm<double> LAICompetitionConstant { get { return laiCompetitionConstant; } }
         public double GrassThresholdMultiplier { get { return grassThresholdMultiplier; } }
 
         public Landis.Library.Parameters.Species.AuxParm<double> LightLAIShape { get { return lightLAIShape; } }
@@ -1336,6 +1338,12 @@ namespace Landis.Extension.Succession.NECN
             growthLAI[species] = VerifyRange(newValue, 0.0, 1.0, "GrowthLAI");
         }
 
+        public void SetLAICompetitionConstant(ISpecies species, double newValue)
+        {
+            Debug.Assert(species != null);
+            laiCompetitionConstant[species] = VerifyRange(newValue, -5, 0.0, "LAICompetitionConstant");
+        }
+
         public void SetLightLAIShape(ISpecies species, double newValue)
         {
             Debug.Assert(species != null);
@@ -1552,6 +1560,8 @@ namespace Landis.Extension.Succession.NECN
             maxANPP                 = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             maxBiomass              = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             growthLAI               = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
+            laiCompetitionConstant = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
+
             //CWD Establishment
             cwdBegin = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             cwdMax = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
