@@ -1,7 +1,7 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V8"
 #define ExtensionName "NECN Succession"
-#define AppVersion "8.0"
+#define AppVersion "8.0.3"
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
 
@@ -54,7 +54,7 @@ Source: {#BuildDir}\Landis.Extension.Succession.NECN-v8.pdb; DestDir: {#ExtDir};
 Source: {#LibraryDir}\Landis.Library.UniversalCohorts-v1.dll; DestDir: {#ExtDir}; Flags: ignoreversion uninsneveruninstall 
 Source: {#LibraryDir}\Landis.Library.Metadata-v2.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall 
 Source: {#LibraryDir}\Landis.Library.Parameters-v2.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall 
-Source: {#LibraryDir}\Landis.Library.Climate-v5.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall 
+Source: {#LibraryDir}\Landis.Library.Climate-v5.dll; DestDir: {#ExtDir}; Flags: ignoreversion uninsneveruninstall 
 Source: {#LibraryDir}\Landis.Library.Succession-v9.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall 
 Source: {#LibraryDir}\Landis.Library.InitialCommunity.Universal.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall 
 
