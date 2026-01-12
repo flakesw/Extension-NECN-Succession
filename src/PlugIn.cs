@@ -259,6 +259,10 @@ namespace Landis.Extension.Succession.NECN
             // SF todo is there a better place to put this? See if we can put it somewhere that gets delegated to the Succession Library
             foreach (ActiveSite site in ModelCore.Landscape)
             {
+
+                // Store the previous fire year
+                SiteVars.PreviousFireYear[site] = SiteVars.FireDisturbedYear[site];
+
                 if (SiteVars.NeedsPostFireGermination[site])
                 {
                     //PlugIn.ModelCore.UI.WriteLine("   Post-fire germination at site {0}.", site.Location);
@@ -359,8 +363,6 @@ namespace Landis.Extension.Succession.NECN
                         if (SiteVars.FireSeverity != null && SiteVars.FireSeverity[site] > 0)
                             FireEffects.ReduceLayers(SiteVars.FireSeverity[site], site);
 
-                        // Store the previous fire year before updating
-                        SiteVars.PreviousFireYear[site] = SiteVars.FireDisturbedYear[site];
                         SiteVars.FireDisturbedYear[site] = ModelCore.CurrentTime;
                         
                         //Track which species had mature cohorts before this fire
