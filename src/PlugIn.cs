@@ -264,7 +264,6 @@ namespace Landis.Extension.Succession.NECN
                     //PlugIn.ModelCore.UI.WriteLine("   Post-fire germination at site {0}.", site.Location);
                     Seedbank.PostfireGerminate(site);
                     Seedbank.ClearSeedbank(site);
-                    SiteVars.SpeciesWithMatureCohortPreFire[site].Clear(); // Clear after using
                     SiteVars.NeedsPostFireGermination[site] = false;
                 }
             }
@@ -645,9 +644,15 @@ namespace Landis.Extension.Succession.NECN
             //After a fire, seedbanking species will have reproductionType == "seedbank" instead of "seed", so they
             //will make a new cohort as usual
             if (SpeciesData.SeedbankLongevity[species] > 0 && reproductionType == "seed")
-            { 
-                SiteVars.SeedbankAge[site][species] = 0;
-                SiteVars.SeedbankViability[site][species] = true;
+            {
+                int timeSincePreviousFire = PlugIn.ModelCore.CurrentTime - SiteVars.PreviousFireYear[site];
+
+                //only allow dispersal to sites with long eough time since fire //STRICT seedbank dispersal
+                if (timeSincePreviousFire >= species.Maturity)
+                {
+                    SiteVars.SeedbankAge[site][species] = 0;
+                    SiteVars.SeedbankViability[site][species] = true;
+                }
             }
             else
             {
@@ -669,9 +674,6 @@ namespace Landis.Extension.Succession.NECN
                     //Only add to the counter if the species is not a seedbanking species. If seedbanking,
                     //the new cohort hasn't been created yet.
                     SpeciesBySeed[species.Index]++;
-
-                    //SpeciesBySeedbank[species.Index]++;
-                    //PlugIn.ModelCore.UI.WriteLine("using the regular seeding algorithm for seedbank stuff");
                 }
                 
             }

@@ -27,18 +27,18 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
 
-
+            //Increment seedbank age or remove seedbank if too old
             foreach (ISpecies species in seedbankSpeciesList)
             {
                 int seedbank_longevity = SpeciesData.SeedbankLongevity[species];
 
-                //Initialize the seedbank age and viability if not already done
+               /* //Initialize the seedbank age and viability if not already done
                 // SF needed? we should only be working with species already in the seedbank
                 if (!SiteVars.SeedbankAge[site].ContainsKey(species))
                 {
                     SiteVars.SeedbankAge[site][species] = 0;
                     SiteVars.SeedbankViability[site][species] = false;
-                }
+                }*/
                 
                 SiteVars.SeedbankAge[site][species] += PlugIn.Parameters.Timestep; //increment seedbank age by timestep length
 
@@ -58,7 +58,7 @@ namespace Landis.Extension.Succession.NECN
             var maturePresentList = new List<ISpecies>();
             foreach (ISpeciesCohorts cohort in SiteVars.Cohorts[site])
             {
-                if (SpeciesData.SeedbankLongevity[cohort.Species] > 0 && cohort.IsMaturePresent) //only for seedbanking species with mature cohorts (use logical &&)
+                if (SpeciesData.SeedbankLongevity[cohort.Species] > 0 && cohort.IsMaturePresent) //only for seedbanking species with mature cohorts
                 {
                     if (!maturePresentList.Contains(cohort.Species))
                     {
@@ -69,12 +69,20 @@ namespace Landis.Extension.Succession.NECN
             if (OtherData.CalibrateMode) PlugIn.ModelCore.UI.WriteLine("Seedbanking species mature present at site {0}: {1}",
                 site.Location, string.Join(", ", maturePresentList.ConvertAll(s => s.Name)));
 
+            //Calculate time since last fire at the site
+            int timeSincePreviousFire = PlugIn.ModelCore.CurrentTime - SiteVars.PreviousFireYear[site];
+
             //loop through all mature seedbanking species at the site 
+            //Reset age to 0 if mature cohorts are present to disperse
             foreach (ISpecies species in maturePresentList)
             {
-                //if (OtherData.CalibrateMode) PlugIn.ModelCore.UI.WriteLine("Adding seeds for {0} at site {1}", species.Name, site.Location);
-                SiteVars.SeedbankViability[site][species] = true;
-                SiteVars.SeedbankAge[site][species] = 0;
+                //check if enough time has elapsed since last fire
+                int sexualMaturity = species.Maturity;
+                if (timeSincePreviousFire >= sexualMaturity)
+                {
+                    SiteVars.SeedbankViability[site][species] = true;
+                    SiteVars.SeedbankAge[site][species] = 0;
+                }
             }
 
         }
@@ -84,18 +92,17 @@ namespace Landis.Extension.Succession.NECN
             // Iterate over a snapshot of the keys to avoid collection-modified issues and to safely check viability
             foreach (ISpecies species in SiteVars.SeedbankAge[site].Keys.ToList())
             {
-                bool isViable;
-                if (!SiteVars.SeedbankViability[site].TryGetValue(species, out isViable) || !isViable)
+               if (!SiteVars.SeedbankViability[site].TryGetValue(species, out bool isViable))
                     continue;
 
                 // Only allow germination if time since fire exceeds species sexual maturity
                 int timeSincePreviousFire = PlugIn.ModelCore.CurrentTime - SiteVars.PreviousFireYear[site];
                 int sexualMaturity = species.Maturity;
 
-                // Check if this species had mature cohorts before the fire
+                // Check if this species had mature cohorts before the most recent fire
                 bool hadMatureCohorts = SiteVars.SpeciesWithMatureCohortPreFire[site].Contains(species);
                 
-                // If mature cohorts were present, no maturity penalty for seedbank germination
+                // If mature cohorts were present, no maturity penalty for seedbank germination (we just use viability from Seedbank.UpdateSeedbak)
                 // Otherwise, apply the maturity multiplier for seed-dispersed species
                 double maturityScalar = hadMatureCohorts ? 1.0 : SpeciesData.SeedbankMaturityMultiplier[species];
                 double maturityThreshold = sexualMaturity * maturityScalar;

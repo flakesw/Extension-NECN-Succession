@@ -255,9 +255,9 @@ namespace Landis.Extension.Succession.NECN
                 MonthlyClimaticWaterDeficit[site] = new double[12];
                 MonthlyActualEvapotranspiration[site] = new double[12];
 
-                SeedbankAge[site] = new Dictionary<ISpecies, int>(); //seedbank
+                SeedbankAge[site] = new Dictionary<ISpecies, int>(); //seedbank age (time since seeds were last added)
                 SeedbankViability[site] = new Dictionary<ISpecies, bool>(); //seedbank viability
-                SpeciesWithMatureCohortPreFire[site] = new HashSet<ISpecies>(); //Track species with mature cohorts befo
+                SpeciesWithMatureCohortPreFire[site] = new HashSet<ISpecies>(); //Track species with mature cohorts before fire
 
                 //CohortResorbedNallocation[site] = new Dictionary<int, Dictionary<int, double>>();
 
