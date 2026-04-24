@@ -6,9 +6,9 @@ LandisData  "Biomass Harvest"
 >>-----------------
 Timestep		1
 
-ManagementAreas 	./biomass-harvest_Management_s2e1.gis
+ManagementAreas 	./biomass-harvest_Management_s2e1.tif
 
-Stands     		./biomass-harvest_Stand_s2e1.gis
+Stands     		./biomass-harvest_Stand_s2e1.tif
 
 
 

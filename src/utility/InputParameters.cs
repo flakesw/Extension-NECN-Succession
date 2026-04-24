@@ -294,7 +294,7 @@ namespace Landis.Extension.Succession.NECN
 
         //--------------------------------------------------------------
         /// <summary>
-        /// Determines the type of post-fire regeneration.
+        /// Determines the type of seedbank germination.
         /// </summary>
         public OtherData.TriggerForSeedbankGermination SeedbankGerminationTrigger { get; set; }
 
