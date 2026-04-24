@@ -263,15 +263,15 @@ namespace Landis.Extension.Succession.NECN
                 // Store the previous fire year
                 SiteVars.PreviousFireYear[site] = SiteVars.FireDisturbedYear[site];
 
-                if (SiteVars.NeedsPostFireGermination[site])
+                if (SiteVars.NeedsSeedbankGermination[site])
                 {
                     //PlugIn.ModelCore.UI.WriteLine("   Post-fire germination at site {0}.", site.Location);
                     Seedbank.PostfireGerminate(site);
                     Seedbank.ClearSeedbank(site);
-                    SiteVars.NeedsPostFireGermination[site] = false;
+                    SiteVars.NeedsSeedbankGermination[site] = false;
                 }
             }
-            SiteVars.NeedsPostFireGermination.ActiveSiteValues = false;
+            SiteVars.NeedsSeedbankGermination.ActiveSiteValues = false;
 
             if (Timestep > 0)
                 ClimateRegionData.SetAllEcoregionsFutureAnnualClimate(ModelCore.CurrentTime);
@@ -349,12 +349,23 @@ namespace Landis.Extension.Succession.NECN
                     }
                     woodInput -= woodInput * HarvestEffects.GetCohortWoodRemoval(site);
                     foliarInput -= foliarInput * HarvestEffects.GetCohortLeafRemoval(site);
+
+                    if (OtherData.RegenType == OtherData.TriggerForSeedbankGermination.Harvest ||
+                        OtherData.RegenType == OtherData.TriggerForSeedbankGermination.FireAndHarvest)
+                    {
+                        SiteVars.NeedsSeedbankGermination[site] = true;
+                    }
                 }
                 if (eventArgs.DisturbanceType != null && disturbanceType.IsMemberOf("disturbance:fire"))
                 {
 
                     SiteVars.FireSeverity = ModelCore.GetSiteVar<byte>("Fire.Severity");
-                    Landis.Library.Succession.Reproduction.CheckForPostFireRegen(eventArgs.Cohort, site);
+
+                    if (OtherData.RegenType == OtherData.TriggerForSeedbankGermination.Fire ||
+                        OtherData.RegenType == OtherData.TriggerForSeedbankGermination.FireAndHarvest) 
+                    {
+                        Landis.Library.Succession.Reproduction.CheckForPostFireRegen(eventArgs.Cohort, site);
+                    }
 
                     if (ModelCore.CurrentTime > SiteVars.FireDisturbedYear[site]) // this is the first cohort killed/damaged
                     {
@@ -386,7 +397,7 @@ namespace Landis.Extension.Succession.NECN
                     woodInput -= live_woodFireConsumption;
                     foliarInput -= live_foliarFireConsumption;
 
-                    SiteVars.NeedsPostFireGermination[site] = true;
+                    SiteVars.NeedsSeedbankGermination[site] = true;
                 }
                 if (eventArgs.DisturbanceType != null && disturbanceType.IsMemberOf("disturbance:browse"))
                 {

@@ -42,7 +42,8 @@ namespace Landis.Extension.Succession.NECN
         string SlopeMapName { get; set; }
         string AspectMapName { get; set; }
         bool CalibrateMode { get; set; }
-        WaterType WType {get;set;}
+        WaterType WType { get; set; }
+        OtherData.TriggerForSeedbankGermination SeedbankGerminationTrigger { get; set; }
         double ProbEstablishAdjustment { get; set; }
         bool SmokeModelOutputs { get; set; }
         double GrassThresholdMultiplier { get; }

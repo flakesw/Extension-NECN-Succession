@@ -275,6 +275,12 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(wt);
             parameters.WType = WParse(wt.Value);
 
+            InputVar<string> regenType = new InputVar<string>("SeedbankGerminationTrigger");
+            if (ReadOptionalVar(regenType))
+                parameters.SeedbankGerminationTrigger = RegenTypeParse(regenType.Value);
+            else
+                parameters.SeedbankGerminationTrigger = OtherData.TriggerForSeedbankGermination.Fire; // default: backward compatible
+
             InputVar<double> pea = new InputVar<double>("ProbabilityEstablishAdjust");
             ReadVar(pea);
             parameters.ProbEstablishAdjustment = pea.Value;
@@ -667,6 +673,17 @@ namespace Landis.Extension.Succession.NECN
             else if (word == "Ratio")
                 return WaterType.Ratio;
             throw new System.FormatException("Valid names:  Linear, Ratio");
+        }
+        //---------------------------------------------------------------------
+        public static OtherData.TriggerForSeedbankGermination RegenTypeParse(string word)
+        {
+            if (word == "Fire")
+                return OtherData.TriggerForSeedbankGermination.Fire;
+            else if (word == "Harvest")
+                return OtherData.TriggerForSeedbankGermination.Harvest;
+            else if (word == "FireAndHarvest")
+                return OtherData.TriggerForSeedbankGermination.FireAndHarvest;
+            throw new System.FormatException("Valid names:  Fire, Harvest, FireAndHarvest");
         }
         //---------------------------------------------------------------------
 

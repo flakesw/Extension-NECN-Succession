@@ -291,6 +291,13 @@ namespace Landis.Extension.Succession.NECN
         /// Determines whether moisture effects on decomposition follow a linear or ratio calculation.
         /// </summary>
         public WaterType WType { get; set; }
+
+        //--------------------------------------------------------------
+        /// <summary>
+        /// Determines the type of post-fire regeneration.
+        /// </summary>
+        public OtherData.TriggerForSeedbankGermination SeedbankGerminationTrigger { get; set; }
+
         //---------------------------------------------------------------------
         /// <summary>
         /// Adjust probability of establishment due to variable time step.  A multiplier.

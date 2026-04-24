@@ -8,14 +8,15 @@ namespace Landis.Extension.Succession.NECN
 {
     public class OtherData
     {
+        
 
         // USER INPUTS ------------------------------------------------------------
         public static LitterType[] LitterParameters;
         public static bool CalibrateMode;
         public static double ProbEstablishAdjust;
         public static WaterType WaterDecayFunction;
-        //public static bool SoilWaterVersion_Henne = false;
-        //public static bool DGS_waterlimit = false;
+        public enum TriggerForSeedbankGermination { Fire, Harvest, FireAndHarvest }
+        public static TriggerForSeedbankGermination RegenType;
 
         // NOTE: *****************************************************************
         // ALL input data comments derived from the Century Model Interface Help -
@@ -203,7 +204,7 @@ namespace Landis.Extension.Succession.NECN
             CalibrateMode = parameters.CalibrateMode;
             //SoilWaterVersion_Henne = parameters.SoilWater_Henne;
             WaterDecayFunction = parameters.WType;
-
+            RegenType = parameters.SeedbankGerminationTrigger;
 
             // Structural decomposition rate, the fraction of the pool that turns over each year.
             litterParmsSurface.DecayRateStrucC = 3.9 / 100.0;//DEC1(1)  
