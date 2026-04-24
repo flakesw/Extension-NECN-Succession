@@ -91,6 +91,7 @@ namespace Landis.Extension.Succession.NECN
         public static Landis.Library.Parameters.Species.AuxParm<double> FractionANPPtoLeaf;
         public static Landis.Library.Parameters.Species.AuxParm<int> SeedbankLongevity;
         public static Landis.Library.Parameters.Species.AuxParm<double> SeedbankMaturityMultiplier;
+        public static Landis.Library.Parameters.Species.AuxParm<double> CompetitionIndex;
 
         //---------------------------------------------------------------------
         public static void Initialize(IInputParameters parameters)
@@ -145,6 +146,7 @@ namespace Landis.Extension.Succession.NECN
             FractionANPPtoLeaf = parameters.FractionANPPtoLeaf;
             SeedbankLongevity = parameters.SeedbankLongevity;
             SeedbankMaturityMultiplier = parameters.SeedbankMaturityMultiplier;
+            CompetitionIndex = parameters.CompetitionIndex;
 
             LightLAIShape        = parameters.LightLAIShape;
             LightLAIScale       = parameters.LightLAIScale;
