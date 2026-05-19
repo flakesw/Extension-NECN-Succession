@@ -1,7 +1,7 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V8"
 #define ExtensionName "NECN Succession"
-#define AppVersion "8.2_seedbanking-setup-2026-4-24"
+#define AppVersion "8.2_seedbanking-setup-2026-5-15"
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
 

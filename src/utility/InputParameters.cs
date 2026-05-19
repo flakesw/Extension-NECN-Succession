@@ -139,7 +139,7 @@ namespace Landis.Extension.Succession.NECN
         private Landis.Library.Parameters.Species.AuxParm<double> fractionANPPtoLeaf;
         private Landis.Library.Parameters.Species.AuxParm<int> seedbankLongevity;
         private Landis.Library.Parameters.Species.AuxParm<double> seedbankMaturityMultiplier;
-
+        private Landis.Library.Parameters.Species.AuxParm<bool> seedbankOnly;
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -398,7 +398,7 @@ namespace Landis.Extension.Succession.NECN
         public Landis.Library.Parameters.Species.AuxParm<double> FractionANPPtoLeaf { get { return fractionANPPtoLeaf; } }
         public Landis.Library.Parameters.Species.AuxParm<int> SeedbankLongevity { get { return seedbankLongevity; } }
         public Landis.Library.Parameters.Species.AuxParm<double> SeedbankMaturityMultiplier { get { return seedbankMaturityMultiplier; } }
-
+        public Landis.Library.Parameters.Species.AuxParm<bool> SeedbankOnly { get { return seedbankOnly; } }
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -1302,6 +1302,11 @@ namespace Landis.Extension.Succession.NECN
             Debug.Assert(species != null);
             seedbankMaturityMultiplier[species] = value;
         }
+        public void SetSeedbankOnly(ISpecies species, bool value)
+        {
+            Debug.Assert(species != null);
+            seedbankOnly[species] = value;
+        }
 
         public InputParameters(ISpeciesDataset speciesDataset, int litterCnt, int functionalCnt)
         {
@@ -1377,6 +1382,7 @@ namespace Landis.Extension.Succession.NECN
             fractionANPPtoLeaf = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
             seedbankLongevity = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             seedbankMaturityMultiplier = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
+            seedbankOnly = new Landis.Library.Parameters.Species.AuxParm<bool>(speciesDataset);
 
             lightLAIShape = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
             lightLAIScale = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);

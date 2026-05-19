@@ -153,6 +153,7 @@ namespace Landis.Extension.Succession.NECN
         Landis.Library.Parameters.Species.AuxParm<double> FineRootFraction { get; }
         Landis.Library.Parameters.Species.AuxParm<int> SeedbankLongevity { get; }
         Landis.Library.Parameters.Species.AuxParm<double> SeedbankMaturityMultiplier { get; }
+        Landis.Library.Parameters.Species.AuxParm<bool> SeedbankOnly { get; }
 
         double AtmosNslope {get;}
         double AtmosNintercept {get;}

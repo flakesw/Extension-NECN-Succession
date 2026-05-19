@@ -179,7 +179,7 @@ namespace Landis.Extension.Succession.NECN
                         ModelCore.CurrentTime, ModelCore.CurrentTime - maxFireYear, ModelCore.CurrentTime - minFireYear);
                 }
             }
-
+            ModelCore.UI.WriteLine("   Initializing climate");
             //Initialize climate.
             Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);
             ClimateRegionData.Initialize(Parameters);
@@ -190,9 +190,11 @@ namespace Landis.Extension.Succession.NECN
             //  Cohorts must be created before the base class is initialized
             //  because the base class' reproduction module uses the core's
             //  SuccessionCohorts property in its Initialization method.
+            ModelCore.UI.WriteLine("   Initializing initial cohorts");
             Library.UniversalCohorts.Cohorts.Initialize(Timestep, new CohortBiomass());
 
             // Initialize Reproduction routines:
+            ModelCore.UI.WriteLine("   Initializing reproduction routines");
             Reproduction.SufficientResources = SufficientLight;
             Reproduction.Establish = Establish;
             Reproduction.AddNewCohort = AddNewCohort;
@@ -207,6 +209,7 @@ namespace Landis.Extension.Succession.NECN
 
             if (DroughtMortality.UseDrought)
             {
+                ModelCore.UI.WriteLine("   Initializing drought mortality parameters");
                 DroughtMortality.Initialize(Parameters);
             }
             else
@@ -542,6 +545,34 @@ namespace Landis.Extension.Succession.NECN
         }
 
         //---------------------------------------------------------------------
+        /// <summary>
+        /// Evaluates the LAI-based light probability for a species at a site,
+        /// including the nursery log modifier if applicable.
+        /// Unlike SufficientLight, this method has no seedbank bypass and is
+        /// used to gate immediate cohort creation for dual-mode seedbanking species.
+        /// </summary>
+        private static bool EvaluateLightProbability(ISpecies species, ActiveSite site)
+        {
+            double a = SpeciesData.LightLAIShape[species];
+            double b = SpeciesData.LightLAIScale[species];
+            double c = SpeciesData.LightLAILocation[species];
+            double adjust = SpeciesData.LightLAIAdjust[species];
+            double lai = SiteVars.LAI[site];
+
+            double lightProbability = adjust * (((a / b) * Math.Pow((lai / b), (a - 1)) * Math.Exp(-Math.Pow((lai / b), a))) + c);
+            lightProbability = Math.Min(lightProbability, 1.0);
+
+            if (!SpeciesData.NurseLog_depend[species])
+                return modelCore.GenerateUniform() < lightProbability;
+
+            double nurseryLogAvailabilityModifier = 2.0;
+            double nurseryLogAvailability = 1 - Math.Pow(ComputeNurseryLogAreaRatio(species, site) - 1, nurseryLogAvailabilityModifier);
+            lightProbability *= nurseryLogAvailability;
+            return modelCore.GenerateUniform() < lightProbability;
+        }
+
+
+        //---------------------------------------------------------------------
         // <summary>
         // Compute the ratio of projected area (= occupancy area) of nursery logs to the grid area.
         // W.Hotta & Chihiro;
@@ -654,18 +685,29 @@ namespace Landis.Extension.Succession.NECN
             tempObject.WoodBiomass = initialBiomass[0];
             tempObject.LeafBiomass = initialBiomass[1];
 
-            //Seedbanking species have their seeds put into the seedbank, rather than immediately making a new cohort.
-            //After a fire, seedbanking species will have reproductionType == "seedbank" instead of "seed", so they
-            //will make a new cohort as usual
             if (SpeciesData.SeedbankLongevity[species] > 0 && reproductionType == "seed")
-            {
+            {   //Is a seedbanking species and is reproducing via seed, so add to seedbank instead of creating a cohort,
+                //and conditionally also create a cohort if it's dual-mode and light and establishment conditions are met.
                 int timeSincePreviousFire = PlugIn.ModelCore.CurrentTime - SiteVars.PreviousFireYear[site];
 
-                //only allow dispersal to sites with long eough time since fire //STRICT seedbank dispersal
                 if (timeSincePreviousFire >= species.Maturity)
                 {
                     SiteVars.SeedbankAge[site][species] = 0;
                     SiteVars.SeedbankViability[site][species] = true;
+                }
+
+                // Dual-mode species also create an immediate cohort, but gate it by
+                // light and establishment — evaluated directly here because the
+                // library delegates are bypassed for all seedbanking species.
+                if (!SpeciesData.SeedbankOnly[species])
+                {
+                    bool sufficientLight = EvaluateLightProbability(species, site);
+                    bool canEstablish = modelCore.GenerateUniform() < Establishment.Calculate(species, site);
+                    if (sufficientLight && canEstablish)
+                    {
+                        SiteVars.Cohorts[site].AddNewCohort(species, 1, Convert.ToInt32(initialBiomass[0] + initialBiomass[1]), 0, woodLeafBiomasses);
+                        SpeciesBySeed[species.Index]++;
+                    }
                 }
             }
             else
@@ -683,20 +725,15 @@ namespace Landis.Extension.Succession.NECN
             }
             else if (reproductionType == "seed")
             {
-                if (!(SpeciesData.SeedbankLongevity[species] > 0))
+                if (SpeciesData.SeedbankLongevity[species] == 0)
                 {
-                    //Only add to the counter if the species is not a seedbanking species. If seedbanking,
-                    //the new cohort hasn't been created yet.
                     SpeciesBySeed[species.Index]++;
                 }
-                
             }
             else if (reproductionType == "seedbank")
             {
                 SpeciesBySeedbank[species.Index]++;
-                //PlugIn.ModelCore.UI.WriteLine("Adding seedbank cohort for {0} at site {1}", species.Name, site.Location);
             }
-
         }
         //---------------------------------------------------------------------
         /// <summary>

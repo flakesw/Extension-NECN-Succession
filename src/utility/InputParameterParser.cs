@@ -512,6 +512,7 @@ namespace Landis.Extension.Succession.NECN
                 parameters.SetFineRootFraction(species, System.Convert.ToDouble(row["FineRootFraction"]));
                 parameters.SetSeedbankLongevity(species, System.Convert.ToInt32(row["SeedbankLongevity"]));
                 parameters.SetSeedbankMaturityMultiplier(species, ReadSeedbankMaturityMultiplier(row));
+                parameters.SetSeedbankOnly(species, ReadSeedbankOnly(row));
 
             }
 
@@ -896,6 +897,19 @@ namespace Landis.Extension.Succession.NECN
             catch
             {
                 return 1.0; // Default to 1.0 (no adjustment to maturity requirement)
+            }
+        }
+        private bool ReadSeedbankOnly(DataRow row)
+        {
+            try
+            {
+                bool seedbankOnly = System.Convert.ToBoolean(row["SeedbankOnly"]);
+                return seedbankOnly;
+            }
+            catch
+            {
+                return true; // Default: any species with SeedbankLongevity > 0 reproduces via seedbank only;
+                             // set SeedbankOnly = false in the species table for dual-mode (seed + seedbank) behaviour.
             }
         }
     }

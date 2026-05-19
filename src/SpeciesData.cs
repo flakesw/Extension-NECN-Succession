@@ -93,6 +93,8 @@ namespace Landis.Extension.Succession.NECN
         public static Landis.Library.Parameters.Species.AuxParm<double> SeedbankMaturityMultiplier;
         public static Landis.Library.Parameters.Species.AuxParm<double> CompetitionIndex;
 
+       public static Landis.Library.Parameters.Species.AuxParm<bool> SeedbankOnly;
+
         //---------------------------------------------------------------------
         public static void Initialize(IInputParameters parameters)
         {
@@ -146,6 +148,7 @@ namespace Landis.Extension.Succession.NECN
             FractionANPPtoLeaf = parameters.FractionANPPtoLeaf;
             SeedbankLongevity = parameters.SeedbankLongevity;
             SeedbankMaturityMultiplier = parameters.SeedbankMaturityMultiplier;
+            SeedbankOnly = parameters.SeedbankOnly;
             CompetitionIndex = parameters.CompetitionIndex;
 
             LightLAIShape        = parameters.LightLAIShape;
@@ -153,7 +156,6 @@ namespace Landis.Extension.Succession.NECN
             LightLAILocation = parameters.LightLAILocation;
             LightLAIAdjust = parameters.LightLAIAdjust;   
 
-            
 
             foreach (ISpecies spp in PlugIn.ModelCore.Species)
             {
